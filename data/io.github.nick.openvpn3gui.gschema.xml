@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/io/github/nick/openvpn3gui/" id="io.github.nick.openvpn3gui" gettext-domain="io.github.nick.openvpn3gui">
+    <key name="default-profile" type="s">
+      <default>''</default>
+      <summary>Default profile</summary>
+      <description>D-Bus path of the profile controlled by the Wingpanel switch</description>
+    </key>
+    <key name="window-width" type="i">
+      <default>580</default>
+      <summary>Window width</summary>
+      <description>Most recent width of the main window</description>
+    </key>
+    <key name="window-height" type="i">
+      <default>540</default>
+      <summary>Window height</summary>
+      <description>Most recent height of the main window</description>
+    </key>
+  </schema>
+
+  <schema id="io.github.nick.openvpn3gui.profile" gettext-domain="io.github.nick.openvpn3gui">
+    <key name="username" type="s">
+      <default>''</default>
+      <summary>User name</summary>
+      <description>User name sent to the VPN server for this profile</description>
+    </key>
+  </schema>
+</schemalist>

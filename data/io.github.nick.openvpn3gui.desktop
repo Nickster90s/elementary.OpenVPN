@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=OpenVPN 3
+GenericName=VPN Client
+Comment=Manage OpenVPN 3 connection profiles
+Exec=io.github.nick.openvpn3gui %U
+Icon=io.github.nick.openvpn3gui
+Terminal=false
+Categories=Network;Security;GTK;
+Keywords=VPN;OpenVPN;Network;Tunnel;Privacy;
+StartupNotify=true
+MimeType=application/x-openvpn-profile;
+X-GNOME-UsesNotifications=true
