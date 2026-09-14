@@ -130,6 +130,18 @@ namespace Ovpn3Gui {
             }
 
             /*
+             * Nothing to indicate if the VPN client is not installed. This has
+             * to happen before anything is connected to the controller, so the
+             * null checks elsewhere hold.
+             */
+            if (!controller.backend_installed ()) {
+                warning ("OpenVPN 3 is not installed; the indicator will stay hidden");
+                controller = null;
+                visible = false;
+                return;
+            }
+
+            /*
              * Without this the panel switch would be dead for any profile
              * whose password is not in the keyring: the backend asks, nobody
              * answers, and the attempt is abandoned.

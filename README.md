@@ -54,14 +54,41 @@ services.
 
 ## Build and install
 
-Dependencies:
+### 1. The OpenVPN 3 client
+
+This is only a front end. The actual VPN client is
+[OpenVPN 3 Linux](https://github.com/OpenVPN/openvpn3-linux), which is **not**
+in the Ubuntu archive — it comes from OpenVPN's own repository:
+
+```sh
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://packages.openvpn.net/packages-repo.gpg \
+    | sudo tee /etc/apt/keyrings/openvpn.asc > /dev/null
+
+# Use Ubuntu's codename, not elementary's. `lsb_release -cs` answers "circe"
+# here, and there is no such repository; elementary OS 8 is noble.
+. /etc/os-release
+echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $UBUNTU_CODENAME main" \
+    | sudo tee /etc/apt/sources.list.d/openvpn-packages.list > /dev/null
+
+sudo apt update
+sudo apt install -y openvpn3-client
+```
+
+Check it landed before going further — this should print a version:
+
+```sh
+openvpn3 version
+```
+
+### 2. Build dependencies
 
 ```sh
 sudo apt install -y build-essential valac meson ninja-build \
     libwingpanel-dev libgranite-dev libgtk-3-dev libsecret-1-dev libglib2.0-dev gettext
 ```
 
-Build and install:
+### 3. Build and install
 
 ```sh
 meson setup build --prefix=/usr
@@ -83,6 +110,14 @@ To uninstall:
 ```sh
 sudo ninja -C build uninstall
 ```
+
+## Troubleshooting
+
+**"OpenVPN 3 Is Not Installed"**, or importing a profile fails — step 1 above
+was skipped, or the repository line used elementary's codename. `openvpn3
+version` is the quick test. The services are D-Bus activated and stop when
+idle, so `openvpn3 sessions-list` returning nothing is normal and is not a
+sign that anything is missing.
 
 ## Profiles written for OpenVPN 2
 

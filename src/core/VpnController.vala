@@ -184,6 +184,33 @@ namespace Ovpn3Gui {
             return profile_cache;
         }
 
+        /*
+         * Whether the OpenVPN 3 services exist at all. They are D-Bus
+         * activated and exit when idle, so "not currently running" says
+         * nothing; only the activatable name list distinguishes an idle
+         * service from a package that was never installed.
+         */
+        public bool backend_installed () {
+            try {
+                var reply = connection.call_sync (
+                    "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                    "ListActivatableNames", null, new VariantType ("(as)"),
+                    DBusCallFlags.NONE, 10000, null
+                );
+                var names = reply.get_child_value (0);
+                for (size_t i = 0; i < names.n_children (); i++) {
+                    if (names.get_child_value (i).get_string () == Ovpn3.CONFIG_BUS) {
+                        return true;
+                    }
+                }
+            } catch (GLib.Error e) {
+                warning ("Could not ask the bus for activatable names: %s", e.message);
+                /* Assume it is there rather than block the user on our own doubt. */
+                return true;
+            }
+            return false;
+        }
+
         public Profile? profile_for (string config_path) {
             foreach (unowned Profile profile in list_profiles ()) {
                 if (profile.config_path == config_path) {

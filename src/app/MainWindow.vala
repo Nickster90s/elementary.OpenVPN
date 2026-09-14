@@ -31,6 +31,11 @@ namespace Ovpn3Gui {
                 return;
             }
 
+            if (!controller.backend_installed ()) {
+                build_missing_backend ();
+                return;
+            }
+
             build_ui ();
             wire_controller ();
             reload ();
@@ -44,6 +49,28 @@ namespace Ovpn3Gui {
             var alert = new Granite.Widgets.AlertView (
                 _("The OpenVPN 3 service is unavailable"),
                 _("Check that openvpn3 is installed and that the system D-Bus services are running.\n\n%s").printf (message),
+                "dialog-error"
+            );
+            alert.show_all ();
+
+            var header = new Gtk.HeaderBar () { show_close_button = true, title = _("OpenVPN 3") };
+            header.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+            set_titlebar (header);
+
+            add (alert);
+            default_width = 520;
+            default_height = 400;
+            show_all ();
+        }
+
+        /*
+         * Without openvpn3 there is nothing to manage. Saying so here beats
+         * looking healthy and then failing on the first import.
+         */
+        private void build_missing_backend () {
+            var alert = new Granite.Widgets.AlertView (
+                _("OpenVPN 3 Is Not Installed"),
+                _("This app is a front end for the OpenVPN 3 Linux client, which does not appear to be installed.\n\nInstall the openvpn3-client package, then reopen this window."),
                 "dialog-error"
             );
             alert.show_all ();
